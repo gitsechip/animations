@@ -1,0 +1,39 @@
+[
+    {
+      "id": 1,
+      "titulo": "Camiseta Deportiva",
+      "descripcion": "Camiseta de algodón premium para entrenamiento",
+      "precio": 299.99,
+      "moneda": "MXN",
+      "categoria": "Ropa",
+      "tallas": ["S", "M", "L", "XL"],
+      "color": "Rojo",
+      "imagen": "https://via.placeholder.com/300x200.png?text=Camiseta+Deportiva",
+      "stock": 50
+    },
+    {
+      "id": 2,
+      "titulo": "Sneakers Urbanos",
+      "descripcion": "Tenis casuales con diseño moderno y suela antideslizante",
+      "precio": 899.99,
+      "moneda": "MXN",
+      "categoria": "Calzado",
+      "tallas": [38, 39, 40, 41, 42, 43],
+      "color": "Negro",
+      "imagen": "https://via.placeholder.com/300x200.png?text=Sneakers+Urbanos",
+      "stock": 20
+    },
+    {
+      "id": 3,
+      "titulo": "Mochila Ejecutiva",
+      "descripcion": "Mochila resistente al agua con compartimento para laptop",
+      "precio": 559.00,
+      "moneda": "MXN",
+      "categoria": "Accesorios",
+      "tallas": [],
+      "color": "Gris",
+      "imagen": "https://via.placeholder.com/300x200.png?text=Mochila+Ejecutiva",
+      "stock": 15
+    }
+  ]
+  
