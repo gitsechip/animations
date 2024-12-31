@@ -8,7 +8,7 @@ let catalogo = [];
 
 // Al cargar la página, guardamos el fetch de productos en 'catalogo'
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("productos.json")
+  fetch("https://gitsechip.github.io/animations/productos.json")
     .then(response => response.json())
     .then(data => {
       catalogo = data; // Guardamos el array de productos en la variable global 'catalogo'
