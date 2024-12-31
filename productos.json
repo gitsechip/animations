@@ -1,15 +1,21 @@
 [
     {
-      "id": 1,
-      "titulo": "Camiseta Deportiva",
-      "descripcion": "Camiseta de algodón premium para entrenamiento",
-      "precio": 299.99,
-      "moneda": "MXN",
-      "categoria": "Ropa",
-      "tallas": ["S", "M", "L", "XL"],
-      "color": "Rojo",
-      "imagen": "https://via.placeholder.com/300x200.png?text=Camiseta+Deportiva",
-      "stock": 50
+        "id": 1,
+        "titulo": "Camiseta Deportiva",
+        "descripcion": "Camiseta de algodón premium para entrenamiento",
+        "precio": 299.99,
+        "moneda": "MXN",
+        "categorias": ["Ropa", "Ofertas", "Unisex"],
+        "tallas": ["S", "M", "L", "XL"],
+        "color": "Rojo",
+        "features": ["Transpirable", "SecadoRápido"],
+        "imagen": "https://via.placeholder.com/600x400.png?text=Camiseta+Principal",
+        "imagenes": [
+          "https://via.placeholder.com/600x400.png?text=Camiseta+Principal",
+          "https://via.placeholder.com/600x400.png?text=Camiseta+Vista+1",
+          "https://via.placeholder.com/600x400.png?text=Camiseta+Vista+2"
+        ],
+        "stock": 50
     },
     {
       "id": 2,
@@ -17,9 +23,10 @@
       "descripcion": "Tenis casuales con diseño moderno y suela antideslizante",
       "precio": 899.99,
       "moneda": "MXN",
-      "categoria": "Calzado",
+      "categorias": ["Calzado", "Ofertas"],
       "tallas": [38, 39, 40, 41, 42, 43],
       "color": "Negro",
+      "features": ["Impermeable"],
       "imagen": "https://via.placeholder.com/300x200.png?text=Sneakers+Urbanos",
       "stock": 20
     },
@@ -29,11 +36,25 @@
       "descripcion": "Mochila resistente al agua con compartimento para laptop",
       "precio": 559.00,
       "moneda": "MXN",
-      "categoria": "Accesorios",
+      "categorias": ["Accesorios"],
       "tallas": [],
       "color": "Gris",
+      "features": [],
       "imagen": "https://via.placeholder.com/300x200.png?text=Mochila+Ejecutiva",
       "stock": 15
+    },
+    {
+      "id": 4,
+      "titulo": "Sudadera Casual",
+      "descripcion": "Sudadera con capucha para uso diario",
+      "precio": 499.00,
+      "moneda": "MXN",
+      "categorias": ["Ropa", "Unisex"],
+      "tallas": ["M", "L"],
+      "color": "Azul",
+      "features": ["Capucha", "BolsilloFrontal"],
+      "imagen": "https://via.placeholder.com/300x200.png?text=Sudadera+Casual",
+      "stock": 10
     }
   ]
   
