@@ -10,8 +10,8 @@ let catalogo = [];
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM completamente cargado y parseado - cart.js");
   // Cargar catálogo de productos
-  const productos = await cargarProductos();
-  catalogo = productos;
+  await cargarProductos();
+  catalogo = productosGlobal;
 
   cargarCarritoDesdeLocalStorage();
   actualizarBadge();
