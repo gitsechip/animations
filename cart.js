@@ -1,6 +1,6 @@
 // cart.js
 
-import { productosGlobal, cargarProductos } from './data.js';
+import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
 
 // Variables globales para el carrito
 let cart = [];

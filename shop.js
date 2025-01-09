@@ -1,7 +1,7 @@
 // shop.js
 
-import { cargarProductos, productosGlobal } from './data.js';
-import { addToCart } from './cart.js';
+import { cargarProductos, productosGlobal } from 'https://gitsechip.github.io/animations/data.js';
+import { addToCart } from 'https://gitsechip.github.io/animations/cart.js';
 
 let categoriaSeleccionada = null;
 let colorSeleccionado = null;
