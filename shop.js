@@ -96,14 +96,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   function toggleDropdown(dropdown, button) {
+    console.log(`Toggling dropdown for ${button.id}`);
     closeAllDropdowns();
     const isActive = dropdown.classList.contains('active');
     if (!isActive) {
       dropdown.classList.add('active');
       button.setAttribute("aria-expanded", "true");
+      console.log(`Dropdown ${dropdown.id} activado`);
     } else {
       dropdown.classList.remove('active');
       button.setAttribute("aria-expanded", "false");
+      console.log(`Dropdown ${dropdown.id} desactivado`);
     }
   }
 
@@ -122,6 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   categoryList.addEventListener("click", e => {
     const cat = e.target.getAttribute("data-category");
     if (cat) {
+      console.log(`Categoría seleccionada: ${cat}`);
       categoriaSeleccionada = (cat === "all") ? null : cat;
       filterCategoryValue.textContent = categoriaSeleccionada ? formatearTexto(categoriaSeleccionada) : "Todas las Categorías";
       closeAllDropdowns();
@@ -134,6 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   colorList.addEventListener("click", e => {
     const c = e.target.getAttribute("data-color");
     if (c) {
+      console.log(`Color seleccionado: ${c}`);
       colorSeleccionado = (c === "all") ? null : c;
       filterColorValue.textContent = colorSeleccionado ? formatearTexto(colorSeleccionado) : "Todos los Colores";
       closeAllDropdowns();
@@ -146,6 +151,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   featuresList.addEventListener("click", e => {
     const f = e.target.getAttribute("data-feature");
     if (f) {
+      console.log(`Feature seleccionada: ${f}`);
       featureSeleccionada = (f === "all") ? null : f;
       filterFeaturesValue.textContent = featureSeleccionada ? formatearTexto(featureSeleccionada) : "Todas las Características";
       closeAllDropdowns();
@@ -159,6 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const min = e.target.getAttribute("data-precio-min");
     const max = e.target.getAttribute("data-precio-max");
     if (min !== null && max !== null) {
+      console.log(`Precio seleccionado: Min=${min}, Max=${max}`);
       if (min === "0" && max === "Infinity") {
         priceSeleccionado = null;
         filterPriceValue.textContent = "Todos los Precios";
@@ -176,6 +183,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   sortList.addEventListener("click", e => {
     const s = e.target.getAttribute("data-sort");
     if (s) {
+      console.log(`Orden seleccionado: ${s}`);
       sortSeleccionado = s;
       filterSortValue.textContent = sortSeleccionado;
       closeAllDropdowns();
@@ -186,6 +194,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 10. Unificar filtros y renderizar
   function filtrarYRenderizar() {
+    console.log("Filtrando y renderizando productos");
     let productosFiltrados = [...productosGlobal];
 
     // Filtrar por categoría
@@ -233,6 +242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 11. Renderizar productos con paginación
   function renderProducts(productos, pagina) {
+    console.log(`Renderizando productos para la página ${pagina}`);
     const inicio = (pagina - 1) * productosPorPagina;
     const fin = inicio + productosPorPagina;
     const productosPagina = productos.slice(inicio, fin);
@@ -309,6 +319,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 12. Renderizar paginación
   function renderPagination(productos) {
+    console.log("Renderizando paginación");
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = "";
 
@@ -320,6 +331,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       li.classList.add("page-item", i === paginaActual ? "active" : "");
       li.innerHTML = `<button class="page-link" aria-label="Página ${i}">${i}</button>`;
       li.addEventListener("click", () => {
+        console.log(`Navegando a la página ${i}`);
         paginaActual = i;
         renderProducts(productos, paginaActual);
         renderPagination(productos);
@@ -331,6 +343,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 13. Generar opciones de filtro únicas
   function generarOpcionesFiltro(productos) {
+    console.log("Generando opciones de filtro");
     const categoriasUnicas = [...new Set(productos.flatMap(p => p.categorias || []))];
     const coloresUnicos = [...new Set(productos.map(p => p.color).filter(Boolean))];
     const featuresUnicas = [...new Set(productos.flatMap(p => p.features || []))];
@@ -385,6 +398,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 14. Generar opciones de precio
   function generarOpcionesPrecio() {
+    console.log("Generando opciones de precio");
     // Insertar "Mostrar todo" al inicio
     priceList.innerHTML = `<li data-precio-min="0" data-precio-max="Infinity" tabindex="0">Mostrar todo</li>`;
 

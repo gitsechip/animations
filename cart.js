@@ -1,6 +1,6 @@
 // cart.js
 
-import { cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
+import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
 
 // Variables globales para el carrito
 let cart = [];
@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Función para agregar un producto al carrito
 export function addToCart(productId) {
+  console.log(`Añadiendo al carrito: ${productId}`);
   const productoEncontrado = catalogo.find(p => p.id === productId);
   if (productoEncontrado) {
     const itemEnCarrito = cart.find(item => item.id === productId);
@@ -52,6 +53,7 @@ export function addToCart(productId) {
 
 // Función para eliminar un producto del carrito
 export function removeFromCart(productId) {
+  console.log(`Eliminando del carrito: ${productId}`);
   const index = cart.findIndex(item => item.id === productId);
   if (index !== -1) {
     cart.splice(index, 1);
@@ -64,6 +66,7 @@ export function removeFromCart(productId) {
 
 // Función para incrementar la cantidad de un producto
 export function incrementQuantity(productId) {
+  console.log(`Incrementando cantidad de: ${productId}`);
   const item = cart.find(item => item.id === productId);
   if (item) {
     if (item.cantidad < item.stock) {
@@ -80,6 +83,7 @@ export function incrementQuantity(productId) {
 
 // Función para decrementar la cantidad de un producto
 export function decrementQuantity(productId) {
+  console.log(`Decrementando cantidad de: ${productId}`);
   const item = cart.find(item => item.id === productId);
   if (item) {
     if (item.cantidad > 1) {

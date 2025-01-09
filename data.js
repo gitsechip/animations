@@ -3,13 +3,15 @@
 export let productosGlobal = [];
 
 export async function cargarProductos() {
-  const url = "https://gitsechip.github.io/animations/productos.json";
+  const url = "https://gitsechip.github.io/animations/productos.json"; // Ruta relativa
   try {
     const response = await fetch(url);
+    console.log(`Fetching productos from ${url}`);
     if (!response.ok) {
       throw new Error("Error en la respuesta de la red");
     }
     const data = await response.json();
+    console.log("Productos cargados en data.js:", data);
     productosGlobal = data;
     return data;
   } catch (error) {
