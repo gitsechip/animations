@@ -3,7 +3,7 @@
 export let productosGlobal = [];
 
 export async function cargarProductos() {
-  const url = "https://dl.dropboxusercontent.com/scl/fi/s6acm1jzsne7hpsf0g9tk/productos.json?rlkey=300xbepk8iy9koledu6emxirv&st=7d00mrm1&dl=0";
+  const url = "https://gitsechip.github.io/animations/productos.json";
   try {
     const response = await fetch(url);
     if (!response.ok) {
