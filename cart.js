@@ -1,6 +1,6 @@
 // cart.js
 
-import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
+import { cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
 
 // Variables globales para el carrito
 let cart = [];
@@ -8,6 +8,7 @@ let catalogo = [];
 
 // Al cargar la página, cargamos el catálogo y el carrito desde Local Storage
 document.addEventListener("DOMContentLoaded", async () => {
+  console.log("DOM completamente cargado y parseado - cart.js");
   // Cargar catálogo de productos
   const productos = await cargarProductos();
   catalogo = productos;

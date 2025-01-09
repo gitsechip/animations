@@ -21,6 +21,7 @@ let paginaActual = 1;
 const productosPorPagina = 6;
 
 document.addEventListener("DOMContentLoaded", async () => {
+  console.log("DOM completamente cargado y parseado - shop.js");
   const productList = document.getElementById("productList");
   const pagination = document.getElementById("pagination");
 
@@ -96,15 +97,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function toggleDropdown(dropdown, button) {
     closeAllDropdowns();
-    const isVisible = dropdown.style.display === "block";
-    dropdown.style.display = isVisible ? "none" : "block";
-    button.setAttribute("aria-expanded", !isVisible);
+    const isActive = dropdown.classList.contains('active');
+    if (!isActive) {
+      dropdown.classList.add('active');
+      button.setAttribute("aria-expanded", "true");
+    } else {
+      dropdown.classList.remove('active');
+      button.setAttribute("aria-expanded", "false");
+    }
   }
 
   function closeAllDropdowns() {
     const dropdowns = document.querySelectorAll(".dropdown-filter");
     dropdowns.forEach(dropdown => {
-      dropdown.style.display = "none";
+      dropdown.classList.remove('active');
     });
     const buttons = document.querySelectorAll(".filter-pill");
     buttons.forEach(btn => {
