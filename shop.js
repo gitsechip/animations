@@ -5,11 +5,11 @@ import { addToCart } from 'https://gitsechip.github.io/animations/cart.js';
 
 let paginaActual = 1;
 const productosPorPagina = 6;
-let productosFiltrados = [...productosGlobal];
+let productosFiltrados = [];
 
-// Referencias a elementos del DOM
 const productList = document.getElementById("productList");
 const pagination = document.getElementById("pagination");
+
 const searchFormDesktop = document.getElementById("searchFormDesktop");
 const searchInputDesktop = document.getElementById("searchInputDesktop");
 const searchButtonDesktop = document.getElementById("searchButtonDesktop");
@@ -21,6 +21,7 @@ const searchButtonMobile = document.getElementById("searchButtonMobile");
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM completamente cargado y parseado - shop.js");
   await cargarProductos(); // Asegurarse de que productosGlobal esté cargado
+  productosFiltrados = [...productosGlobal];
   filtrarYRenderizar();
 });
 
