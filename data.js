@@ -16,7 +16,7 @@ export async function cargarProductos() {
     return data;
   } catch (error) {
     console.error("Error al cargar productos:", error);
-    alert("Hubo un problema al cargar los productos. Por favor, intenta nuevamente más tarde.");
+    toastr.error("Hubo un problema al cargar los productos. Por favor, intenta nuevamente más tarde.");
     return [];
   }
 }

@@ -6,6 +6,25 @@ import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/an
 let cart = [];
 let catalogo = [];
 
+// Configuración de Toastr (si no está configurado en shop.js)
+toastr.options = {
+  "closeButton": true,
+  "debug": false,
+  "newestOnTop": true,
+  "progressBar": true,
+  "positionClass": "toast-top-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "3000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+};
+
 // Al cargar la página, cargamos el catálogo y el carrito desde Local Storage
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM completamente cargado y parseado - cart.js");
@@ -36,14 +55,14 @@ export function addToCart(productId) {
     if (itemEnCarrito) {
       if (itemEnCarrito.cantidad < productoEncontrado.stock) {
         itemEnCarrito.cantidad += 1;
-        mostrarNotificacion("Producto agregado al carrito");
+        toastr.info(`${productoEncontrado.titulo} añadido al carrito.`);
       } else {
-        alert("Has alcanzado el límite de stock disponible para este producto.");
+        toastr.warning("Has alcanzado el límite de stock disponible para este producto.");
         return;
       }
     } else {
       cart.push({ ...productoEncontrado, cantidad: 1 });
-      mostrarNotificacion("Producto agregado al carrito");
+      toastr.success(`${productoEncontrado.titulo} añadido al carrito.`);
     }
     guardarCarritoEnLocalStorage();
     actualizarBadge();
@@ -56,11 +75,11 @@ export function removeFromCart(productId) {
   console.log(`Eliminando del carrito: ${productId}`);
   const index = cart.findIndex(item => item.id === productId);
   if (index !== -1) {
-    cart.splice(index, 1);
+    const removedItem = cart.splice(index, 1)[0];
     guardarCarritoEnLocalStorage();
     actualizarBadge();
     renderCartItems();
-    mostrarNotificacion("Producto eliminado del carrito");
+    toastr.error(`${removedItem.titulo} eliminado del carrito.`);
   }
 }
 
@@ -74,9 +93,9 @@ export function incrementQuantity(productId) {
       guardarCarritoEnLocalStorage();
       actualizarBadge();
       renderCartItems();
-      mostrarNotificacion("Cantidad actualizada");
+      toastr.info(`Cantidad de ${item.titulo} actualizada.`);
     } else {
-      alert("Has alcanzado el límite de stock disponible para este producto.");
+      toastr.warning("Has alcanzado el límite de stock disponible para este producto.");
     }
   }
 }
@@ -91,7 +110,7 @@ export function decrementQuantity(productId) {
       guardarCarritoEnLocalStorage();
       actualizarBadge();
       renderCartItems();
-      mostrarNotificacion("Cantidad actualizada");
+      toastr.info(`Cantidad de ${item.titulo} actualizada.`);
     } else {
       // Si la cantidad es 1, eliminar el producto del carrito
       removeFromCart(productId);
@@ -128,7 +147,7 @@ function renderCartItems() {
     total += item.precio * item.cantidad;
 
     const itemRow = document.createElement("div");
-    itemRow.classList.add("d-flex", "align-items-center", "mb-3", "flex-nowrap", "product-row");
+    itemRow.classList.add("d-flex", "align-items-center", "mb-3", "flex-nowrap", "product-row", "animate__animated", "animate__fadeInRight");
 
     const img = document.createElement("img");
     img.src = item.imagen;
@@ -158,7 +177,7 @@ function renderCartItems() {
 
     // Controles de cantidad y eliminación
     const controlsDiv = document.createElement("div");
-    controlsDiv.classList.add("d-flex", "align-items-center", "mt-2", "controls-container", "flex-wrap");
+    controlsDiv.classList.add("d-flex", "align-items-center", "mt-2", "controls-container", "flex-wrap", "animate__animated", "animate__fadeIn");
 
     const decrementBtn = document.createElement("button");
     decrementBtn.classList.add("btn", "btn-sm", "btn-outline-secondary", "me-1");
@@ -220,15 +239,21 @@ function cargarCarritoDesdeLocalStorage() {
   }
 }
 
-// Función para mostrar notificaciones
-function mostrarNotificacion(mensaje) {
-  const notificacion = document.createElement("div");
-  notificacion.className = "alert alert-success alert-notification";
-  notificacion.role = "alert";
-  notificacion.textContent = mensaje;
-  document.body.appendChild(notificacion);
-
-  setTimeout(() => {
-    notificacion.remove();
-  }, 3000);
+// Función para mostrar notificaciones con Toastr
+function mostrarNotificacion(mensaje, tipo = 'info') {
+  switch(tipo) {
+    case 'success':
+      toastr.success(mensaje);
+      break;
+    case 'error':
+      toastr.error(mensaje);
+      break;
+    case 'warning':
+      toastr.warning(mensaje);
+      break;
+    case 'info':
+    default:
+      toastr.info(mensaje);
+      break;
+  }
 }

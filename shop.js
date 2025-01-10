@@ -3,6 +3,25 @@
 import { cargarProductos, productosGlobal } from 'https://gitsechip.github.io/animations/data.js';
 import { addToCart } from 'https://gitsechip.github.io/animations/cart.js';
 
+// Configuración de Toastr
+toastr.options = {
+  "closeButton": true,
+  "debug": false,
+  "newestOnTop": true,
+  "progressBar": true,
+  "positionClass": "toast-top-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "3000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+};
+
 let paginaActual = 1;
 const productosPorPagina = 6;
 let productosFiltrados = [];
@@ -17,11 +36,31 @@ const searchFormMobile = document.getElementById("searchFormMobile");
 const searchInputMobile = document.getElementById("searchInputMobile");
 const searchButtonMobile = document.getElementById("searchButtonMobile");
 
+// Inicializar Awesomplete para auto-sugerencias
+function initializeAutoComplete() {
+  const productTitles = productosGlobal.map(producto => producto.titulo);
+  
+  new Awesomplete(searchInputDesktop, {
+    list: productTitles,
+    minChars: 1,
+    maxItems: 10,
+    autoFirst: true
+  });
+
+  new Awesomplete(searchInputMobile, {
+    list: productTitles,
+    minChars: 1,
+    maxItems: 10,
+    autoFirst: true
+  });
+}
+
 // Evento para cargar productos al iniciar
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM completamente cargado y parseado - shop.js");
   await cargarProductos(); // Asegurarse de que productosGlobal esté cargado
   productosFiltrados = [...productosGlobal];
+  initializeAutoComplete();
   filtrarYRenderizar();
 });
 
@@ -31,7 +70,7 @@ function filtrarYRenderizar() {
   renderPagination(productosFiltrados);
 }
 
-// Función para renderizar productos con paginación
+// Función para renderizar productos con paginación y animaciones
 function renderProducts(productos, pagina) {
   console.log(`Renderizando productos para la página ${pagina}`);
   const inicio = (pagina - 1) * productosPorPagina;
@@ -47,7 +86,7 @@ function renderProducts(productos, pagina) {
 
   productosPagina.forEach(producto => {
     const col = document.createElement("div");
-    col.classList.add("col-md-4", "mb-4");
+    col.classList.add("col-md-4", "mb-4", "animate__animated", "animate__fadeInUp");
 
     // Crear tarjeta de producto de forma segura
     const card = document.createElement("div");
@@ -148,6 +187,13 @@ function handleSearch(event) {
 
   paginaActual = 1;
   filtrarYRenderizar();
+
+  // Mostrar notificación usando Toastr
+  if (query !== "") {
+    toastr.info(`Mostrando resultados para "${query}"`);
+  } else {
+    toastr.success("Mostrando todos los productos");
+  }
 }
 
 // Asignar eventos a los formularios de búsqueda
