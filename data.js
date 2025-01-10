@@ -3,7 +3,7 @@
 export let productosGlobal = [];
 
 export async function cargarProductos() {
-  const url = "https://gitsechip.github.io/animations/productos.json"; // Ruta correcta
+  const url = "https://gitsechip.github.io/animations/productos.json"; // Ruta relativa
   try {
     const response = await fetch(url);
     console.log(`Fetching productos from ${url}`);
@@ -16,7 +16,7 @@ export async function cargarProductos() {
     return data;
   } catch (error) {
     console.error("Error al cargar productos:", error);
-    toastr.error("Hubo un problema al cargar los productos. Por favor, intenta nuevamente más tarde.");
+    alert("Hubo un problema al cargar los productos. Por favor, intenta nuevamente más tarde.");
     return [];
   }
 }
