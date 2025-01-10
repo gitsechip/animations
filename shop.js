@@ -34,13 +34,46 @@ if (!searchFormMobile || !searchInputMobile || !searchButtonMobile) {
   console.error("Elementos del formulario de búsqueda móvil no encontrados.");
 }
 
+// Función para mostrar notificaciones Toast
+function mostrarNotificacion(mensaje, tipo = 'success') {
+  const toastContainer = document.getElementById('toastContainer');
+  if (!toastContainer) {
+    console.error("Elemento con ID 'toastContainer' no encontrado en el DOM.");
+    return;
+  }
+
+  const toastEl = document.createElement('div');
+  toastEl.classList.add('toast', 'align-items-center', 'text-bg-' + tipo, 'border-0');
+  toastEl.setAttribute('role', 'alert');
+  toastEl.setAttribute('aria-live', 'assertive');
+  toastEl.setAttribute('aria-atomic', 'true');
+
+  toastEl.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">
+        ${mensaje}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+    </div>
+  `;
+
+  toastContainer.appendChild(toastEl);
+  const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+  toast.show();
+
+  // Eliminar el toast del DOM después de que se oculta
+  toastEl.addEventListener('hidden.bs.toast', () => {
+    toastEl.remove();
+  });
+}
+
 // Evento para cargar productos al iniciar
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM completamente cargado y parseado - shop.js");
   await cargarProductos(); // Asegurarse de que productosGlobal esté cargado
   console.log("ProductosGlobal después de cargar:", productosGlobal);
   if (productosGlobal.length === 0) {
-    alert("No se cargaron productos. Verifica el archivo productos.json.");
+    mostrarNotificacion("No se cargaron productos. Verifica el archivo productos.json.", 'danger');
   }
   productosFiltrados = [...productosGlobal];
   filtrarYRenderizar();
@@ -179,11 +212,11 @@ function handleSearch(event) {
   paginaActual = 1;
   filtrarYRenderizar();
 
-  // Mostrar notificación usando alert (funcionalidad original)
+  // Mostrar notificación usando Toast
   if (query !== "") {
-    alert(`Mostrando resultados para "${query}"`);
+    mostrarNotificacion(`Mostrando resultados para "${query}"`, 'info');
   } else {
-    alert("Mostrando todos los productos");
+    mostrarNotificacion("Mostrando todos los productos", 'info');
   }
 }
 
