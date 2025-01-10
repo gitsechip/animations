@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Cargar catálogo de productos
   await cargarProductos();
   catalogo = productosGlobal;
+  console.log("Catalogo cargado:", catalogo);
 
   cargarCarritoDesdeLocalStorage();
   actualizarBadge();
@@ -48,6 +49,8 @@ export function addToCart(productId) {
     guardarCarritoEnLocalStorage();
     actualizarBadge();
     renderCartItems();
+  } else {
+    console.error(`Producto con ID ${productId} no encontrado en el catálogo.`);
   }
 }
 
@@ -61,6 +64,8 @@ export function removeFromCart(productId) {
     actualizarBadge();
     renderCartItems();
     mostrarNotificacion("Producto eliminado del carrito");
+  } else {
+    console.error(`Producto con ID ${productId} no está en el carrito.`);
   }
 }
 
@@ -78,6 +83,8 @@ export function incrementQuantity(productId) {
     } else {
       alert("Has alcanzado el límite de stock disponible para este producto.");
     }
+  } else {
+    console.error(`Producto con ID ${productId} no está en el carrito.`);
   }
 }
 
@@ -96,12 +103,18 @@ export function decrementQuantity(productId) {
       // Si la cantidad es 1, eliminar el producto del carrito
       removeFromCart(productId);
     }
+  } else {
+    console.error(`Producto con ID ${productId} no está en el carrito.`);
   }
 }
 
 // Función para actualizar el contador del badge del carrito
 function actualizarBadge() {
   const cartCount = document.getElementById("cartCount");
+  if (!cartCount) {
+    console.error("Elemento con ID 'cartCount' no encontrado en el DOM.");
+    return;
+  }
   let totalItems = 0;
   cart.forEach(item => {
     totalItems += item.cantidad;
@@ -114,6 +127,20 @@ function renderCartItems() {
   const cartItems = document.getElementById("cartItems");
   const cartTotal = document.getElementById("cartTotal");
   const cartItemCount = document.getElementById("cartItemCount");
+
+  if (!cartItems) {
+    console.error("Elemento con ID 'cartItems' no encontrado en el DOM.");
+    return;
+  }
+  if (!cartTotal) {
+    console.error("Elemento con ID 'cartTotal' no encontrado en el DOM.");
+    return;
+  }
+  if (!cartItemCount) {
+    console.error("Elemento con ID 'cartItemCount' no encontrado en el DOM.");
+    return;
+  }
+
   cartItems.innerHTML = "";
 
   if (cart.length === 0) {

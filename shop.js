@@ -17,10 +17,31 @@ const searchFormMobile = document.getElementById("searchFormMobile");
 const searchInputMobile = document.getElementById("searchInputMobile");
 const searchButtonMobile = document.getElementById("searchButtonMobile");
 
+// Verificar si los elementos del DOM fueron encontrados
+if (!productList) {
+  console.error("Elemento con ID 'productList' no encontrado en el DOM.");
+}
+
+if (!pagination) {
+  console.error("Elemento con ID 'pagination' no encontrado en el DOM.");
+}
+
+if (!searchFormDesktop || !searchInputDesktop || !searchButtonDesktop) {
+  console.error("Elementos del formulario de búsqueda de desktop no encontrados.");
+}
+
+if (!searchFormMobile || !searchInputMobile || !searchButtonMobile) {
+  console.error("Elementos del formulario de búsqueda móvil no encontrados.");
+}
+
 // Evento para cargar productos al iniciar
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM completamente cargado y parseado - shop.js");
   await cargarProductos(); // Asegurarse de que productosGlobal esté cargado
+  console.log("ProductosGlobal después de cargar:", productosGlobal);
+  if (productosGlobal.length === 0) {
+    alert("No se cargaron productos. Verifica el archivo productos.json.");
+  }
   productosFiltrados = [...productosGlobal];
   filtrarYRenderizar();
 });
@@ -37,6 +58,11 @@ function renderProducts(productos, pagina) {
   const inicio = (pagina - 1) * productosPorPagina;
   const fin = inicio + productosPorPagina;
   const productosPagina = productos.slice(inicio, fin);
+
+  if (!productList) {
+    console.error("Elemento 'productList' no está disponible.");
+    return;
+  }
 
   productList.innerHTML = "";
 
@@ -109,6 +135,10 @@ function renderProducts(productos, pagina) {
 // Función para renderizar paginación
 function renderPagination(productos) {
   console.log("Renderizando paginación");
+  if (!pagination) {
+    console.error("Elemento 'pagination' no está disponible.");
+    return;
+  }
   pagination.innerHTML = "";
 
   const totalPaginas = Math.ceil(productos.length / productosPorPagina);
@@ -158,7 +188,16 @@ function handleSearch(event) {
 }
 
 // Asignar eventos a los formularios de búsqueda
-searchFormDesktop.addEventListener("submit", handleSearch);
-searchButtonDesktop.addEventListener("click", handleSearch);
-searchFormMobile.addEventListener("submit", handleSearch);
-searchButtonMobile.addEventListener("click", handleSearch);
+if (searchFormDesktop && searchButtonDesktop) {
+  searchFormDesktop.addEventListener("submit", handleSearch);
+  searchButtonDesktop.addEventListener("click", handleSearch);
+} else {
+  console.error("Formularios de búsqueda de desktop no están disponibles.");
+}
+
+if (searchFormMobile && searchButtonMobile) {
+  searchFormMobile.addEventListener("submit", handleSearch);
+  searchButtonMobile.addEventListener("click", handleSearch);
+} else {
+  console.error("Formularios de búsqueda móvil no están disponibles.");
+}
