@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Función para agregar un producto al carrito
 export function addToCart(productId) {
-  console.log(Añadiendo al carrito: ${productId});
+  console.log(`Añadiendo al carrito: ${productId}`);
   const productoEncontrado = catalogo.find(p => p.id === productId);
   if (productoEncontrado) {
     const itemEnCarrito = cart.find(item => item.id === productId);
@@ -53,7 +53,7 @@ export function addToCart(productId) {
 
 // Función para eliminar un producto del carrito
 export function removeFromCart(productId) {
-  console.log(Eliminando del carrito: ${productId});
+  console.log(`Eliminando del carrito: ${productId}`);
   const index = cart.findIndex(item => item.id === productId);
   if (index !== -1) {
     cart.splice(index, 1);
@@ -66,7 +66,7 @@ export function removeFromCart(productId) {
 
 // Función para incrementar la cantidad de un producto
 export function incrementQuantity(productId) {
-  console.log(Incrementando cantidad de: ${productId});
+  console.log(`Incrementando cantidad de: ${productId}`);
   const item = cart.find(item => item.id === productId);
   if (item) {
     if (item.cantidad < item.stock) {
@@ -83,7 +83,7 @@ export function incrementQuantity(productId) {
 
 // Función para decrementar la cantidad de un producto
 export function decrementQuantity(productId) {
-  console.log(Decrementando cantidad de: ${productId});
+  console.log(`Decrementando cantidad de: ${productId}`);
   const item = cart.find(item => item.id === productId);
   if (item) {
     if (item.cantidad > 1) {
@@ -154,7 +154,7 @@ function renderCartItems() {
 
     const price = document.createElement("p");
     price.classList.add("mb-0");
-    price.innerHTML = <strong>${item.precio} ${item.moneda}</strong>;
+    price.innerHTML = `<strong>${item.precio} ${item.moneda}</strong>`;
 
     // Controles de cantidad y eliminación
     const controlsDiv = document.createElement("div");
@@ -164,7 +164,7 @@ function renderCartItems() {
     decrementBtn.classList.add("btn", "btn-sm", "btn-outline-secondary", "me-1");
     decrementBtn.innerHTML = '<i class="bi bi-dash"></i>';
     decrementBtn.onclick = () => decrementQuantity(item.id);
-    decrementBtn.setAttribute("aria-label", Decrementar cantidad de ${item.titulo});
+    decrementBtn.setAttribute("aria-label", `Decrementar cantidad de ${item.titulo}`);
 
     const cantidadSpan = document.createElement("span");
     cantidadSpan.classList.add("mx-2");
@@ -174,13 +174,13 @@ function renderCartItems() {
     incrementBtn.classList.add("btn", "btn-sm", "btn-outline-secondary", "me-3");
     incrementBtn.innerHTML = '<i class="bi bi-plus"></i>';
     incrementBtn.onclick = () => incrementQuantity(item.id);
-    incrementBtn.setAttribute("aria-label", Incrementar cantidad de ${item.titulo});
+    incrementBtn.setAttribute("aria-label", `Incrementar cantidad de ${item.titulo}`);
 
     const removeBtn = document.createElement("button");
     removeBtn.classList.add("btn", "btn-sm", "btn-outline-danger");
     removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
     removeBtn.onclick = () => removeFromCart(item.id);
-    removeBtn.setAttribute("aria-label", Eliminar ${item.titulo} del carrito);
+    removeBtn.setAttribute("aria-label", `Eliminar ${item.titulo} del carrito`);
 
     controlsDiv.appendChild(decrementBtn);
     controlsDiv.appendChild(cantidadSpan);
@@ -198,7 +198,7 @@ function renderCartItems() {
     cartItems.appendChild(itemRow);
   });
 
-  cartTotal.textContent = $${total.toFixed(2)};
+  cartTotal.textContent = `$${total.toFixed(2)}`;
   cartItemCount.textContent = cart.length;
 }
 
@@ -222,13 +222,5 @@ function cargarCarritoDesdeLocalStorage() {
 
 // Función para mostrar notificaciones
 function mostrarNotificacion(mensaje) {
-  const notificacion = document.createElement("div");
-  notificacion.className = "alert alert-success alert-notification";
-  notificacion.role = "alert";
-  notificacion.textContent = mensaje;
-  document.body.appendChild(notificacion);
-
-  setTimeout(() => {
-    notificacion.remove();
-  }, 3000);
+  alert(mensaje); // Temporariamente usando alert. Más adelante puedes reemplazar con Toastr.
 }

@@ -33,7 +33,7 @@ function filtrarYRenderizar() {
 
 // Función para renderizar productos con paginación
 function renderProducts(productos, pagina) {
-  console.log(Renderizando productos para la página ${pagina});
+  console.log(`Renderizando productos para la página ${pagina}`);
   const inicio = (pagina - 1) * productosPorPagina;
   const fin = inicio + productosPorPagina;
   const productosPagina = productos.slice(inicio, fin);
@@ -54,10 +54,10 @@ function renderProducts(productos, pagina) {
     card.classList.add("card", "product-card", "h-100");
 
     const link = document.createElement("a");
-    link.href = detalle.html?id=${producto.id};
+    link.href = `detalle.html?id=${producto.id}`;
     link.style.textDecoration = "none";
     link.style.color = "inherit";
-    link.setAttribute("aria-label", Ver detalles de ${producto.titulo});
+    link.setAttribute("aria-label", `Ver detalles de ${producto.titulo}`);
 
     const img = document.createElement("img");
     img.src = producto.imagen;
@@ -78,7 +78,7 @@ function renderProducts(productos, pagina) {
 
     const price = document.createElement("p");
     price.classList.add("product-price");
-    price.textContent = ${producto.precio} ${producto.moneda};
+    price.textContent = `${producto.precio} ${producto.moneda}`;
 
     cardBody.appendChild(title);
     cardBody.appendChild(desc);
@@ -97,7 +97,7 @@ function renderProducts(productos, pagina) {
       addToCart(producto.id);
       e.stopPropagation();
     };
-    addButton.setAttribute("aria-label", Agregar ${producto.titulo} al carrito);
+    addButton.setAttribute("aria-label", `Agregar ${producto.titulo} al carrito`);
 
     cardFooter.appendChild(addButton);
     card.appendChild(cardFooter);
@@ -117,9 +117,9 @@ function renderPagination(productos) {
   for (let i = 1; i <= totalPaginas; i++) {
     const li = document.createElement("li");
     li.classList.add("page-item", i === paginaActual ? "active" : "");
-    li.innerHTML = <button class="page-link" aria-label="Página ${i}">${i}</button>;
+    li.innerHTML = `<button class="page-link" aria-label="Página ${i}">${i}</button>`;
     li.addEventListener("click", () => {
-      console.log(Navegando a la página ${i});
+      console.log(`Navegando a la página ${i}`);
       paginaActual = i;
       renderProducts(productos, paginaActual);
       renderPagination(productos);
@@ -148,6 +148,13 @@ function handleSearch(event) {
 
   paginaActual = 1;
   filtrarYRenderizar();
+
+  // Mostrar notificación usando alert (funcionalidad original)
+  if (query !== "") {
+    alert(`Mostrando resultados para "${query}"`);
+  } else {
+    alert("Mostrando todos los productos");
+  }
 }
 
 // Asignar eventos a los formularios de búsqueda

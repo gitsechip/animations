@@ -6,9 +6,9 @@ export async function cargarProductos() {
   const url = "https://gitsechip.github.io/animations/productos.json"; // Ruta relativa
   try {
     const response = await fetch(url);
-    console.log(`Fetching productos from ${url}`);
+    console.log(`Fetching productos from ${url}`); // Uso correcto de template literals
     if (!response.ok) {
-      throw new Error("Error en la respuesta de la red");
+      throw new Error(`Error en la respuesta de la red: ${response.status} ${response.statusText}`);
     }
     const data = await response.json();
     console.log("Productos cargados en data.js:", data);
