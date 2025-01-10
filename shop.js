@@ -59,6 +59,7 @@ function initializeAutoComplete() {
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM completamente cargado y parseado - shop.js");
   await cargarProductos(); // Asegurarse de que productosGlobal esté cargado
+  console.log("productosGlobal después de cargar:", productosGlobal); // Verificar que los productos se cargaron
   productosFiltrados = [...productosGlobal];
   initializeAutoComplete();
   filtrarYRenderizar();

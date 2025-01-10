@@ -238,22 +238,3 @@ function cargarCarritoDesdeLocalStorage() {
     }
   }
 }
-
-// Función para mostrar notificaciones con Toastr
-function mostrarNotificacion(mensaje, tipo = 'info') {
-  switch(tipo) {
-    case 'success':
-      toastr.success(mensaje);
-      break;
-    case 'error':
-      toastr.error(mensaje);
-      break;
-    case 'warning':
-      toastr.warning(mensaje);
-      break;
-    case 'info':
-    default:
-      toastr.info(mensaje);
-      break;
-  }
-}

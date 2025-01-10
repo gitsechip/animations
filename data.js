@@ -3,7 +3,7 @@
 export let productosGlobal = [];
 
 export async function cargarProductos() {
-  const url = "https://gitsechip.github.io/animations/productos.json"; // Ruta relativa
+  const url = "https://gitsechip.github.io/animations/productos.json"; // Ruta correcta
   try {
     const response = await fetch(url);
     console.log(`Fetching productos from ${url}`);
