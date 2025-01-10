@@ -6,6 +6,39 @@ import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/an
 let cart = [];
 let catalogo = [];
 
+// Función para mostrar notificaciones Toast
+function mostrarNotificacion(mensaje, tipo = 'success') {
+  const toastContainer = document.getElementById('toastContainer');
+  if (!toastContainer) {
+    console.error("Elemento con ID 'toastContainer' no encontrado en el DOM.");
+    return;
+  }
+
+  const toastEl = document.createElement('div');
+  toastEl.classList.add('toast', 'align-items-center', 'text-bg-' + tipo, 'border-0');
+  toastEl.setAttribute('role', 'alert');
+  toastEl.setAttribute('aria-live', 'assertive');
+  toastEl.setAttribute('aria-atomic', 'true');
+
+  toastEl.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">
+        ${mensaje}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+    </div>
+  `;
+
+  toastContainer.appendChild(toastEl);
+  const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+  toast.show();
+
+  // Eliminar el toast del DOM después de que se oculta
+  toastEl.addEventListener('hidden.bs.toast', () => {
+    toastEl.remove();
+  });
+}
+
 // Al cargar la página, cargamos el catálogo y el carrito desde Local Storage
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM completamente cargado y parseado - cart.js");
@@ -37,20 +70,21 @@ export function addToCart(productId) {
     if (itemEnCarrito) {
       if (itemEnCarrito.cantidad < productoEncontrado.stock) {
         itemEnCarrito.cantidad += 1;
-        mostrarNotificacion("Producto agregado al carrito");
+        mostrarNotificacion("Producto agregado al carrito", 'success');
       } else {
-        alert("Has alcanzado el límite de stock disponible para este producto.");
+        mostrarNotificacion("Has alcanzado el límite de stock disponible para este producto.", 'warning');
         return;
       }
     } else {
       cart.push({ ...productoEncontrado, cantidad: 1 });
-      mostrarNotificacion("Producto agregado al carrito");
+      mostrarNotificacion("Producto agregado al carrito", 'success');
     }
     guardarCarritoEnLocalStorage();
     actualizarBadge();
     renderCartItems();
   } else {
     console.error(`Producto con ID ${productId} no encontrado en el catálogo.`);
+    mostrarNotificacion("Producto no encontrado.", 'danger');
   }
 }
 
@@ -63,9 +97,10 @@ export function removeFromCart(productId) {
     guardarCarritoEnLocalStorage();
     actualizarBadge();
     renderCartItems();
-    mostrarNotificacion("Producto eliminado del carrito");
+    mostrarNotificacion("Producto eliminado del carrito", 'warning');
   } else {
     console.error(`Producto con ID ${productId} no está en el carrito.`);
+    mostrarNotificacion("Producto no encontrado en el carrito.", 'danger');
   }
 }
 
@@ -79,12 +114,13 @@ export function incrementQuantity(productId) {
       guardarCarritoEnLocalStorage();
       actualizarBadge();
       renderCartItems();
-      mostrarNotificacion("Cantidad actualizada");
+      mostrarNotificacion("Cantidad actualizada", 'info');
     } else {
-      alert("Has alcanzado el límite de stock disponible para este producto.");
+      mostrarNotificacion("Has alcanzado el límite de stock disponible para este producto.", 'warning');
     }
   } else {
     console.error(`Producto con ID ${productId} no está en el carrito.`);
+    mostrarNotificacion("Producto no encontrado en el carrito.", 'danger');
   }
 }
 
@@ -98,13 +134,14 @@ export function decrementQuantity(productId) {
       guardarCarritoEnLocalStorage();
       actualizarBadge();
       renderCartItems();
-      mostrarNotificacion("Cantidad actualizada");
+      mostrarNotificacion("Cantidad actualizada", 'info');
     } else {
       // Si la cantidad es 1, eliminar el producto del carrito
       removeFromCart(productId);
     }
   } else {
     console.error(`Producto con ID ${productId} no está en el carrito.`);
+    mostrarNotificacion("Producto no encontrado en el carrito.", 'danger');
   }
 }
 
@@ -245,9 +282,4 @@ function cargarCarritoDesdeLocalStorage() {
       cart = [];
     }
   }
-}
-
-// Función para mostrar notificaciones
-function mostrarNotificacion(mensaje) {
-  alert(mensaje); // Temporariamente usando alert. Más adelante puedes reemplazar con Toastr.
 }
