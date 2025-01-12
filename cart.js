@@ -147,9 +147,9 @@ export function decrementQuantity(productId) {
 
 // Función para actualizar el contador del badge del carrito
 function actualizarBadge() {
-  const cartCount = document.getElementById("cartCount");
+  const cartCount = document.querySelector(".js-cartCount");
   if (!cartCount) {
-    console.error("Elemento con ID 'cartCount' no encontrado en el DOM.");
+    console.error("Elemento con clase 'js-cartCount' no encontrado en el DOM.");
     return;
   }
   let totalItems = 0;
@@ -161,12 +161,12 @@ function actualizarBadge() {
 
 // Función para renderizar los productos en el modal del carrito
 function renderCartItems() {
-  const cartItems = document.getElementById("cartItems");
+  const cartItems = document.querySelector(".js-cartItems");
   const cartTotal = document.getElementById("cartTotal");
   const cartItemCount = document.getElementById("cartItemCount");
 
   if (!cartItems) {
-    console.error("Elemento con ID 'cartItems' no encontrado en el DOM.");
+    console.error("Elemento con clase 'js-cartItems' no encontrado en el DOM.");
     return;
   }
   if (!cartTotal) {
