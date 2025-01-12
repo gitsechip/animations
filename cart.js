@@ -1,6 +1,7 @@
 // cart.js
 
-import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js'; // Asegúrate de que esta ruta sea correcta
+// Importa el catálogo de productos (asegúrate de que esta ruta sea correcta)
+import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
 
 // Variables globales para el carrito
 let cart = [];
@@ -48,12 +49,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Cargar catálogo de productos
   await cargarProductos();
   catalogo = productosGlobal;
-  console.log("Catalogo cargado:", catalogo);
+  console.log("Catálogo cargado:", catalogo);
 
   cargarCarritoDesdeLocalStorage();
   actualizarBadge();
   renderCartItems();
-
+  
   // Escuchar cambios en el almacenamiento para sincronizar entre pestañas
   window.addEventListener('storage', (event) => {
     if (event.key === 'carrito') {
