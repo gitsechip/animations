@@ -1,13 +1,15 @@
 // cart.js
 
-import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
+import { productosGlobal, cargarProductos } from 'https://tu-usuario.github.io/MiTiendaScripts/data.js';
 
 // Variables globales para el carrito
 let cart = [];
 let catalogo = [];
 
 // Función para mostrar notificaciones Toast
-function mostrarNotificacion(mensaje, tipo = 'success') {
+export function mostrarNotificacion(mensaje, tipo = 'success') {
+  console.log(`Mostrando notificación: "${mensaje}" de tipo "${tipo}"`);
+  
   const toastContainer = document.getElementById('toastContainer');
   if (!toastContainer) {
     console.error("Elemento con ID 'toastContainer' no encontrado en el DOM.");
@@ -15,7 +17,7 @@ function mostrarNotificacion(mensaje, tipo = 'success') {
   }
 
   const toastEl = document.createElement('div');
-  toastEl.classList.add('toast', 'align-items-center', 'text-bg-' + tipo, 'border-0');
+  toastEl.classList.add('toast', 'align-items-center', `text-bg-${tipo}`, 'border-0');
   toastEl.setAttribute('role', 'alert');
   toastEl.setAttribute('aria-live', 'assertive');
   toastEl.setAttribute('aria-atomic', 'true');
@@ -35,6 +37,7 @@ function mostrarNotificacion(mensaje, tipo = 'success') {
 
   // Eliminar el toast del DOM después de que se oculta
   toastEl.addEventListener('hidden.bs.toast', () => {
+    console.log(`Eliminando notificación: "${mensaje}"`);
     toastEl.remove();
   });
 }
