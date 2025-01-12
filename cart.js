@@ -185,7 +185,7 @@ function actualizarBadge() {
 }
 
 // Función para renderizar los productos en el modal del carrito
-function renderCartItems() {
+export function renderCartItems() {
   const cartItems = document.querySelector(".js-cartItems");
   const cartTotal = document.getElementById("cartTotal");
   const cartItemCount = document.getElementById("cartItemCount");
@@ -241,7 +241,6 @@ function renderCartItems() {
     desc.style.fontSize = "0.9rem";
     desc.textContent = item.descripcion;
 
-    // Renderizar opciones si existen
     const optionsList = document.createElement("ul");
     optionsList.classList.add("mb-1");
     for (const [key, value] of Object.entries(item.options)) {
@@ -301,6 +300,19 @@ function renderCartItems() {
 
   cartTotal.textContent = `$${total.toFixed(2)}`;
   cartItemCount.textContent = cart.length;
+}
+
+// Función para obtener el contenido actual del carrito
+export function getCart() {
+  return cart;
+}
+
+// Función para limpiar el carrito (para uso futuro)
+export function clearCart() {
+  cart = [];
+  guardarCarritoEnLocalStorage();
+  actualizarBadge();
+  renderCartItems();
 }
 
 // Función para guardar el carrito en Local Storage
