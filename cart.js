@@ -1,6 +1,6 @@
 // cart.js
 
-import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
+import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js'; // Asegúrate de que esta ruta sea correcta
 
 // Variables globales para el carrito
 let cart = [];
@@ -64,12 +64,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-// Función para agregar un producto al carrito
-export function addToCart(productId) {
-  console.log(`Añadiendo al carrito: ${productId}`);
+// Función para agregar un producto al carrito con opciones
+export function addToCart(productId, selectedOptions = {}) {
+  console.log(`Añadiendo al carrito: ${productId} con opciones:`, selectedOptions);
   const productoEncontrado = catalogo.find(p => p.id === productId);
   if (productoEncontrado) {
-    const itemEnCarrito = cart.find(item => item.id === productId);
+    // Crear una clave única para el producto basado en sus opciones
+    const cartItemKey = generateCartItemKey(productId, selectedOptions);
+
+    const itemEnCarrito = cart.find(item => item.key === cartItemKey);
     if (itemEnCarrito) {
       if (itemEnCarrito.cantidad < productoEncontrado.stock) {
         itemEnCarrito.cantidad += 1;
@@ -79,7 +82,20 @@ export function addToCart(productId) {
         return;
       }
     } else {
-      cart.push({ ...productoEncontrado, cantidad: 1 });
+      // Agregar nuevo ítem al carrito con opciones
+      const newItem = {
+        key: cartItemKey, // Clave única
+        id: productoEncontrado.id,
+        titulo: productoEncontrado.titulo,
+        descripcion: productoEncontrado.descripcion,
+        precio: productoEncontrado.precio,
+        moneda: productoEncontrado.moneda,
+        imagen: productoEncontrado.imagen,
+        cantidad: 1,
+        stock: productoEncontrado.stock,
+        options: selectedOptions // Guardar las opciones seleccionadas
+      };
+      cart.push(newItem);
       mostrarNotificacion("Producto agregado al carrito", 'success');
     }
     guardarCarritoEnLocalStorage();
@@ -91,10 +107,16 @@ export function addToCart(productId) {
   }
 }
 
+// Función para generar una clave única basada en el ID y las opciones
+function generateCartItemKey(productId, selectedOptions) {
+  const optionsString = Object.keys(selectedOptions).sort().map(key => `${key}:${selectedOptions[key]}`).join('|');
+  return `${productId}|${optionsString}`;
+}
+
 // Función para eliminar un producto del carrito
-export function removeFromCart(productId) {
-  console.log(`Eliminando del carrito: ${productId}`);
-  const index = cart.findIndex(item => item.id === productId);
+export function removeFromCart(productKey) {
+  console.log(`Eliminando del carrito: ${productKey}`);
+  const index = cart.findIndex(item => item.key === productKey);
   if (index !== -1) {
     cart.splice(index, 1);
     guardarCarritoEnLocalStorage();
@@ -102,15 +124,15 @@ export function removeFromCart(productId) {
     renderCartItems();
     mostrarNotificacion("Producto eliminado del carrito", 'warning');
   } else {
-    console.error(`Producto con ID ${productId} no está en el carrito.`);
+    console.error(`Producto con clave ${productKey} no está en el carrito.`);
     mostrarNotificacion("Producto no encontrado en el carrito.", 'danger');
   }
 }
 
 // Función para incrementar la cantidad de un producto
-export function incrementQuantity(productId) {
-  console.log(`Incrementando cantidad de: ${productId}`);
-  const item = cart.find(item => item.id === productId);
+export function incrementQuantity(productKey) {
+  console.log(`Incrementando cantidad de: ${productKey}`);
+  const item = cart.find(item => item.key === productKey);
   if (item) {
     if (item.cantidad < item.stock) {
       item.cantidad += 1;
@@ -122,15 +144,15 @@ export function incrementQuantity(productId) {
       mostrarNotificacion("Has alcanzado el límite de stock disponible para este producto.", 'warning');
     }
   } else {
-    console.error(`Producto con ID ${productId} no está en el carrito.`);
+    console.error(`Producto con clave ${productKey} no está en el carrito.`);
     mostrarNotificacion("Producto no encontrado en el carrito.", 'danger');
   }
 }
 
 // Función para decrementar la cantidad de un producto
-export function decrementQuantity(productId) {
-  console.log(`Decrementando cantidad de: ${productId}`);
-  const item = cart.find(item => item.id === productId);
+export function decrementQuantity(productKey) {
+  console.log(`Decrementando cantidad de: ${productKey}`);
+  const item = cart.find(item => item.key === productKey);
   if (item) {
     if (item.cantidad > 1) {
       item.cantidad -= 1;
@@ -140,10 +162,10 @@ export function decrementQuantity(productId) {
       mostrarNotificacion("Cantidad actualizada", 'info');
     } else {
       // Si la cantidad es 1, eliminar el producto del carrito
-      removeFromCart(productId);
+      removeFromCart(productKey);
     }
   } else {
-    console.error(`Producto con ID ${productId} no está en el carrito.`);
+    console.error(`Producto con clave ${productKey} no está en el carrito.`);
     mostrarNotificacion("Producto no encontrado en el carrito.", 'danger');
   }
 }
@@ -219,6 +241,15 @@ function renderCartItems() {
     desc.style.fontSize = "0.9rem";
     desc.textContent = item.descripcion;
 
+    // Renderizar opciones si existen
+    const optionsList = document.createElement("ul");
+    optionsList.classList.add("mb-1");
+    for (const [key, value] of Object.entries(item.options)) {
+      const optionItem = document.createElement("li");
+      optionItem.textContent = `${key}: ${value}`;
+      optionsList.appendChild(optionItem);
+    }
+
     const price = document.createElement("p");
     price.classList.add("mb-0");
     price.innerHTML = `<strong>${item.precio} ${item.moneda}</strong>`;
@@ -230,7 +261,7 @@ function renderCartItems() {
     const decrementBtn = document.createElement("button");
     decrementBtn.classList.add("btn", "btn-sm", "btn-outline-secondary", "me-1");
     decrementBtn.innerHTML = '<i class="bi bi-dash"></i>';
-    decrementBtn.onclick = () => decrementQuantity(item.id);
+    decrementBtn.onclick = () => decrementQuantity(item.key);
     decrementBtn.setAttribute("aria-label", `Decrementar cantidad de ${item.titulo}`);
 
     const cantidadSpan = document.createElement("span");
@@ -240,13 +271,13 @@ function renderCartItems() {
     const incrementBtn = document.createElement("button");
     incrementBtn.classList.add("btn", "btn-sm", "btn-outline-secondary", "me-3");
     incrementBtn.innerHTML = '<i class="bi bi-plus"></i>';
-    incrementBtn.onclick = () => incrementQuantity(item.id);
+    incrementBtn.onclick = () => incrementQuantity(item.key);
     incrementBtn.setAttribute("aria-label", `Incrementar cantidad de ${item.titulo}`);
 
     const removeBtn = document.createElement("button");
     removeBtn.classList.add("btn", "btn-sm", "btn-outline-danger");
     removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
-    removeBtn.onclick = () => removeFromCart(item.id);
+    removeBtn.onclick = () => removeFromCart(item.key);
     removeBtn.setAttribute("aria-label", `Eliminar ${item.titulo} del carrito`);
 
     controlsDiv.appendChild(decrementBtn);
@@ -256,6 +287,9 @@ function renderCartItems() {
 
     detailsDiv.appendChild(title);
     detailsDiv.appendChild(desc);
+    if (Object.keys(item.options).length > 0) {
+      detailsDiv.appendChild(optionsList);
+    }
     detailsDiv.appendChild(price);
     detailsDiv.appendChild(controlsDiv);
 
