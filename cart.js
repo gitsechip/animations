@@ -1,15 +1,13 @@
 // cart.js
 
-import { productosGlobal, cargarProductos } from 'https://tu-usuario.github.io/MiTiendaScripts/data.js';
+import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
 
 // Variables globales para el carrito
 let cart = [];
 let catalogo = [];
 
 // Función para mostrar notificaciones Toast
-export function mostrarNotificacion(mensaje, tipo = 'success') {
-  console.log(`Mostrando notificación: "${mensaje}" de tipo "${tipo}"`);
-  
+function mostrarNotificacion(mensaje, tipo = 'success') {
   const toastContainer = document.getElementById('toastContainer');
   if (!toastContainer) {
     console.error("Elemento con ID 'toastContainer' no encontrado en el DOM.");
@@ -17,7 +15,7 @@ export function mostrarNotificacion(mensaje, tipo = 'success') {
   }
 
   const toastEl = document.createElement('div');
-  toastEl.classList.add('toast', 'align-items-center', `text-bg-${tipo}`, 'border-0');
+  toastEl.classList.add('toast', 'align-items-center', 'text-bg-' + tipo, 'border-0');
   toastEl.setAttribute('role', 'alert');
   toastEl.setAttribute('aria-live', 'assertive');
   toastEl.setAttribute('aria-atomic', 'true');
@@ -37,7 +35,6 @@ export function mostrarNotificacion(mensaje, tipo = 'success') {
 
   // Eliminar el toast del DOM después de que se oculta
   toastEl.addEventListener('hidden.bs.toast', () => {
-    console.log(`Eliminando notificación: "${mensaje}"`);
     toastEl.remove();
   });
 }
@@ -150,9 +147,9 @@ export function decrementQuantity(productId) {
 
 // Función para actualizar el contador del badge del carrito
 function actualizarBadge() {
-  const cartCount = document.querySelector(".js-cartCount");
+  const cartCount = document.getElementById("cartCount");
   if (!cartCount) {
-    console.error("Elemento con clase 'js-cartCount' no encontrado en el DOM.");
+    console.error("Elemento con ID 'cartCount' no encontrado en el DOM.");
     return;
   }
   let totalItems = 0;
@@ -164,12 +161,12 @@ function actualizarBadge() {
 
 // Función para renderizar los productos en el modal del carrito
 function renderCartItems() {
-  const cartItems = document.querySelector(".js-cartItems");
+  const cartItems = document.getElementById("cartItems");
   const cartTotal = document.getElementById("cartTotal");
   const cartItemCount = document.getElementById("cartItemCount");
 
   if (!cartItems) {
-    console.error("Elemento con clase 'js-cartItems' no encontrado en el DOM.");
+    console.error("Elemento con ID 'cartItems' no encontrado en el DOM.");
     return;
   }
   if (!cartTotal) {
