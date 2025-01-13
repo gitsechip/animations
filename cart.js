@@ -1,5 +1,4 @@
 // cart.js
-
 // Importa el catálogo de productos (asegúrate de que esta ruta sea correcta)
 import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
 
