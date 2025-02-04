@@ -79,43 +79,46 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Función para agregar un producto al carrito con opciones
 export function addToCart(productId, selectedOptions = {}) {
-  event?.preventDefault();
   console.log(`Añadiendo al carrito: ${productId} con opciones:`, selectedOptions);
   const productoEncontrado = catalogo.find(p => p.id === productId);
-  
   if (productoEncontrado) {
-      const cartItemKey = generateCartItemKey(productId, selectedOptions);
-      const itemEnCarrito = cart.find(item => item.key === cartItemKey);
-      
-      if (itemEnCarrito) {
-          if (itemEnCarrito.cantidad < productoEncontrado.stock) {
-              itemEnCarrito.cantidad += 1;
-              mostrarNotificacion("Producto agregado al carrito", 'success');
-          } else {
-              mostrarNotificacion("Has alcanzado el límite de stock disponible", 'warning');
-              return;
-          }
+    // Crear una clave única para el producto basado en sus opciones
+    const cartItemKey = generateCartItemKey(productId, selectedOptions);
+
+    const itemEnCarrito = cart.find(item => item.key === cartItemKey);
+    if (itemEnCarrito) {
+      if (itemEnCarrito.cantidad < productoEncontrado.stock) {
+        itemEnCarrito.cantidad += 1;
+        mostrarNotificacion("Producto agregado al carrito", 'success');
       } else {
-          const newItem = {
-              key: cartItemKey,
-              id: productoEncontrado.id,
-              titulo: productoEncontrado.titulo,
-              descripcion: productoEncontrado.descripcion,
-              precio: productoEncontrado.precio,
-              moneda: productoEncontrado.moneda,
-              imagen: productoEncontrado.imagen,
-              cantidad: 1,
-              stock: productoEncontrado.stock,
-              options: selectedOptions
-          };
-          cart.push(newItem);
-          mostrarNotificacion("Producto agregado al carrito", 'success');
+        mostrarNotificacion("Has alcanzado el límite de stock disponible para este producto.", 'warning');
+        return;
       }
-      
-      guardarCarritoEnLocalStorage();
-      guardarCarritoEnFirestore();
-      actualizarBadge();
-      renderCartItems();
+    } else {
+      // Agregar nuevo ítem al carrito con opciones
+      const newItem = {
+        key: cartItemKey, // Clave única
+        id: productoEncontrado.id,
+        titulo: productoEncontrado.titulo,
+        descripcion: productoEncontrado.descripcion,
+        precio: productoEncontrado.precio,
+        moneda: productoEncontrado.moneda,
+        imagen: productoEncontrado.imagen,
+        cantidad: 1,
+        stock: productoEncontrado.stock,
+        options: selectedOptions // Guardar las opciones seleccionadas
+      };
+      cart.push(newItem);
+      mostrarNotificacion("Producto agregado al carrito", 'success');
+    }
+    guardarCarritoEnLocalStorage();
+    guardarCarritoEnFirestore(); // Nueva línea
+
+    actualizarBadge();
+    renderCartItems();
+  } else {
+    console.error(`Producto con ID ${productId} no encontrado en el catálogo.`);
+    mostrarNotificacion("Producto no encontrado.", 'danger');
   }
 }
 
