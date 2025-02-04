@@ -2,10 +2,6 @@
 // Importa el catálogo de productos (asegúrate de que esta ruta sea correcta)
 import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
 
-// Importar Firebase desde index.html (ya está inicializado allí)
-const auth = firebase.auth();
-const db = firebase.firestore();
-
 // Variables globales para el carrito
 let cart = [];
 let catalogo = [];
@@ -54,18 +50,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   catalogo = productosGlobal;
   console.log("Catálogo cargado:", catalogo);
 
-  // Escuchar cambios en la autenticación
-  auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      // Usuario autenticado - cargar carrito desde Firestore
-      await cargarCarritoDesdeFirestore();
-    } else {
-      // Usuario no autenticado - usar localStorage
-      cargarCarritoDesdeLocalStorage();
-    }
-    actualizarBadge();
-    renderCartItems();
-  });
+  cargarCarritoDesdeLocalStorage();
+  actualizarBadge();
+  renderCartItems();
   
   // Escuchar cambios en el almacenamiento para sincronizar entre pestañas
   window.addEventListener('storage', (event) => {
@@ -112,8 +99,6 @@ export function addToCart(productId, selectedOptions = {}) {
       mostrarNotificacion("Producto agregado al carrito", 'success');
     }
     guardarCarritoEnLocalStorage();
-    guardarCarritoEnFirestore(); // Nueva línea
-
     actualizarBadge();
     renderCartItems();
   } else {
@@ -135,8 +120,6 @@ export function removeFromCart(productKey) {
   if (index !== -1) {
     cart.splice(index, 1);
     guardarCarritoEnLocalStorage();
-    guardarCarritoEnFirestore(); // Nueva línea
-
     actualizarBadge();
     renderCartItems();
     mostrarNotificacion("Producto eliminado del carrito", 'warning');
@@ -328,7 +311,6 @@ export function getCart() {
 export function clearCart() {
   cart = [];
   guardarCarritoEnLocalStorage();
-  guardarCarritoEnFirestore(); // Nueva línea
   actualizarBadge();
   renderCartItems();
 }
@@ -347,41 +329,6 @@ function cargarCarritoDesdeLocalStorage() {
     } catch (error) {
       console.error("Error al parsear el carrito desde Local Storage:", error);
       cart = [];
-    }
-  }
-}
-
-// Función para guardar el carrito en Firestore
-async function guardarCarritoEnFirestore() {
-  const user = auth.currentUser;
-  if (user) {
-    try {
-      await db.collection('users').doc(user.uid).update({
-        cart: cart,
-        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      console.log('Carrito sincronizado con Firestore');
-    } catch (error) {
-      console.error('Error al guardar en Firestore:', error);
-    }
-  }
-}
-
-// Función para cargar el carrito desde Firestore
-async function cargarCarritoDesdeFirestore() {
-  const user = auth.currentUser;
-  if (user) {
-    try {
-      const doc = await db.collection('users').doc(user.uid).get();
-      if (doc.exists && doc.data().cart) {
-        cart = doc.data().cart;
-        guardarCarritoEnLocalStorage();
-        actualizarBadge();
-        renderCartItems();
-        console.log('Carrito cargado desde Firestore');
-      }
-    } catch (error) {
-      console.error('Error al cargar desde Firestore:', error);
     }
   }
 }
