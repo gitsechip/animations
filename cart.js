@@ -368,17 +368,21 @@ async function guardarCarritoEnFirestore() {
 async function cargarCarritoDesdeFirestore() {
   const user = auth.currentUser;
   if (user) {
-    try {
-      const doc = await db.collection('users').doc(user.uid).get();
-      if (doc.exists && doc.data().cart) {
-        cart = doc.data().cart;
-        guardarCarritoEnLocalStorage();
-        actualizarBadge();
-        renderCartItems();
-        console.log('Carrito cargado desde Firestore');
+      try {
+          const doc = await db.collection('users').doc(user.uid).get();
+          if (doc.exists && doc.data().cart) {
+              // Verifica si el carrito local tiene datos antes de sobreescribir
+              const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+              if (localCart.length === 0) {
+                  cart = doc.data().cart;
+                  guardarCarritoEnLocalStorage();
+                  actualizarBadge();
+                  renderCartItems();
+                  console.log('Carrito cargado desde Firestore');
+              }
+          }
+      } catch (error) {
+          console.error('Error al cargar desde Firestore:', error);
       }
-    } catch (error) {
-      console.error('Error al cargar desde Firestore:', error);
-    }
   }
 }
