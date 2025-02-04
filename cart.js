@@ -48,24 +48,24 @@ export function mostrarNotificacion(mensaje, tipo = 'success') {
 
 // Al cargar la página, cargamos el catálogo y el carrito desde Local Storage
 document.addEventListener("DOMContentLoaded", async () => {
-  console.log("DOM completamente cargado y parseado - cart.js");
-  // Cargar catálogo de productos
-  await cargarProductos();
-  catalogo = productosGlobal;
-  console.log("Catálogo cargado:", catalogo);
+  console.log("Inicializando carrito y detalles...");
 
-  // Escuchar cambios en la autenticación
   auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      // Usuario autenticado - cargar carrito desde Firestore
-      await cargarCarritoDesdeFirestore();
-    } else {
-      // Usuario no autenticado - usar localStorage
-      cargarCarritoDesdeLocalStorage();
-    }
-    actualizarBadge();
-    renderCartItems();
+      if (user) {
+          await cargarCarritoDesdeFirestore();
+      } else {
+          cargarCarritoDesdeLocalStorage();
+      }
+
+      // Asegurar que el producto cargue después del carrito
+      setTimeout(() => {
+          cargarDetallesProducto();
+      }, 100); // Pequeña espera para evitar conflictos
+
+      actualizarBadge();
+      renderCartItems();
   });
+  
   
   // Escuchar cambios en el almacenamiento para sincronizar entre pestañas
   window.addEventListener('storage', (event) => {
