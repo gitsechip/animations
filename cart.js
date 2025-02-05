@@ -2,11 +2,6 @@
 // Importa el catálogo de productos (asegúrate de que esta ruta sea correcta)
 import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
 
-// 1. Importaciones y configuración de Firebase
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-
 const firebaseConfig = {
   apiKey: "AIzaSyC-TQ1IW3vhShutRxNuurxvDcUTCaRH7Mo",
   authDomain: "colmena-4eb03.firebaseapp.com",
@@ -22,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Variables globales para el carrito
+// Variables globales para el carritoo
 let isInitialized = false;
 let cart = [];
 let catalogo = [];
