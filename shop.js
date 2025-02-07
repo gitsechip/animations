@@ -1,7 +1,7 @@
 // shop.js
 
 import { cargarProductos, productosGlobal } from 'https://gitsechip.github.io/animations/data.js';
-import { addToCart } from 'https://raw.githubusercontent.com/gitsechip/colmena/main/cart.js';
+import { addToCart } from 'https://gitsechip.github.io/animations/cart.js';
 
 let paginaActual = 1;
 const productosPorPagina = 6;
