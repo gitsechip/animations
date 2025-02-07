@@ -42,6 +42,55 @@ export function mostrarNotificacion(mensaje, tipo = 'success') {
   });
 }
 
+// Referencia a las instancias globales de Firebase (definidas en index.html)
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/**
+ * Guarda o actualiza un ítem en el carrito de Firestore
+ */
+function addOrUpdateCartItemInFirestore(item) {
+  const user = auth.currentUser;
+  if (!user) {
+    console.log("Usuario no logueado: no se guarda en Firestore.");
+    return;
+  }
+
+  db
+    .collection("users")
+    .doc(user.uid)
+    .collection("cart")
+    .doc(item.key) // Usa la misma clave interna del carrito
+    .set(item)     // Guardamos todo el objeto
+    .then(() => {
+      console.log("Item guardado/actualizado en Firestore:", item.key);
+    })
+    .catch(error => {
+      console.error("Error al guardar/actualizar en Firestore:", error);
+    });
+}
+
+/**
+ * Elimina un ítem del carrito en Firestore
+ */
+function removeCartItemInFirestore(productKey) {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  db
+    .collection("users")
+    .doc(user.uid)
+    .collection("cart")
+    .doc(productKey)
+    .delete()
+    .then(() => {
+      console.log("Item eliminado de Firestore:", productKey);
+    })
+    .catch(error => {
+      console.error("Error al eliminar de Firestore:", error);
+    });
+}
+
 // Al cargar la página, cargamos el catálogo y el carrito desde Local Storage
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("DOM completamente cargado y parseado - cart.js");
@@ -96,10 +145,11 @@ export function addToCart(productId, selectedOptions = {}) {
         options: selectedOptions // Guardar las opciones seleccionadas
       };
       cart.push(newItem);
-      mostrarNotificacion("Producto agregado al carrito", 'success');
 
-      // Llamamos a la función para guardar en Firestore
-      addProductToCartFirestore(newItem);
+      // Sincronizar en Firestore
+      addOrUpdateCartItemInFirestore(newItem);
+
+      mostrarNotificacion("Producto agregado al carrito", 'success');
     }
     guardarCarritoEnLocalStorage();
     actualizarBadge();
@@ -122,6 +172,10 @@ export function removeFromCart(productKey) {
   const index = cart.findIndex(item => item.key === productKey);
   if (index !== -1) {
     cart.splice(index, 1);
+
+    // Eliminar también de Firestore
+    removeCartItemInFirestore(productKey);
+
     guardarCarritoEnLocalStorage();
     actualizarBadge();
     renderCartItems();
@@ -140,6 +194,10 @@ export function incrementQuantity(productKey) {
     if (item.cantidad < item.stock) {
       item.cantidad += 1;
       guardarCarritoEnLocalStorage();
+      
+      // Actualizar en Firestore
+      addOrUpdateCartItemInFirestore(item);
+
       actualizarBadge();
       renderCartItems();
       mostrarNotificacion("Cantidad actualizada", 'info');
@@ -160,6 +218,10 @@ export function decrementQuantity(productKey) {
     if (item.cantidad > 1) {
       item.cantidad -= 1;
       guardarCarritoEnLocalStorage();
+
+      // Actualizar en Firestore
+      addOrUpdateCartItemInFirestore(item);
+
       actualizarBadge();
       renderCartItems();
       mostrarNotificacion("Cantidad actualizada", 'info');
@@ -334,20 +396,4 @@ function cargarCarritoDesdeLocalStorage() {
       cart = [];
     }
   }
-}
-
-// Función para guardar un producto en Firestore
-function addProductToCartFirestore(item) {
-  const user = firebase.auth().currentUser;
-  if (!user) {
-    console.log("Usuario no logueado, no se guardará en Firestore.");
-    return;
-  }
-  db.collection("users").doc(user.uid).collection("cart").doc(item.key).set(item)
-    .then(() => {
-      console.log("Producto guardado en Firestore con clave:", item.key);
-    })
-    .catch(error => {
-      console.error("Error al guardar en Firestore:", error);
-    });
 }
