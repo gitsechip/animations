@@ -397,3 +397,31 @@ function cargarCarritoDesdeLocalStorage() {
     }
   }
 }
+
+function loadFirestoreCart() {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  db
+    .collection("users")
+    .doc(user.uid)
+    .collection("cart")
+    .get()
+    .then(snapshot => {
+      cart = snapshot.docs.map(doc => doc.data());
+      guardarCarritoEnLocalStorage();
+      actualizarBadge();
+      renderCartItems();
+      console.log("Carrito cargado desde Firestore.");
+    })
+    .catch(error => {
+      console.error("Error al cargar carrito desde Firestore:", error);
+    });
+}
+
+// Llama a esta función cuando el usuario inicie sesión:
+auth.onAuthStateChanged(user => {
+  if (user) {
+    loadFirestoreCart();
+  }
+});
