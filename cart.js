@@ -2,23 +2,7 @@
 // Importa el catálogo de productos (asegúrate de que esta ruta sea correcta)
 import { productosGlobal, cargarProductos } from 'https://gitsechip.github.io/animations/data.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC-TQ1IW3vhShutRxNuurxvDcUTCaRH7Mo",
-  authDomain: "colmena-4eb03.firebaseapp.com",
-  projectId: "colmena-4eb03",
-  storageBucket: "colmena-4eb03.firebasestorage.app",
-  messagingSenderId: "268420003210",
-  appId: "1:268420003210:web:8de26ac4a9216a364a0473",
-  measurementId: "G-KRYL9PMTP8"
-};
-
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// Variables globales para el carritoo
-let isInitialized = false;
+// Variables globales para el carrito
 let cart = [];
 let catalogo = [];
 
@@ -66,11 +50,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   catalogo = productosGlobal;
   console.log("Catálogo cargado:", catalogo);
 
-  try {
-    await initializeCart();
-  } catch (error) {
-    console.error("Error en la inicialización:", error);
-  }
+  cargarCarritoDesdeLocalStorage();
+  actualizarBadge();
+  renderCartItems();
   
   // Escuchar cambios en el almacenamiento para sincronizar entre pestañas
   window.addEventListener('storage', (event) => {
@@ -82,78 +64,46 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-// 3. Función de inicialización mejorada
-export async function initializeCart() {
-    try {
-        console.log("Iniciando carrito...");
-        if (!isInitialized) {
-            await new Promise((resolve) => {
-                auth.onAuthStateChanged(async (user) => {
-                    if (user) {
-                        await cargarCarritoDesdeFirestore();
-                    } else {
-                        cargarCarritoDesdeLocalStorage();
-                    }
-                    isInitialized = true;
-                    resolve();
-                });
-            });
-        }
-        return true;
-    } catch (error) {
-        console.error("Error inicializando carrito:", error);
-        return false;
-    }
-}
-
 // Función para agregar un producto al carrito con opciones
-export async function addToCart(productId, selectedOptions = {}) {
-  try {
-    if (!isInitialized) await initializeCart();
-    
-    console.log(`Añadiendo al carrito: ${productId} con opciones:`, selectedOptions);
-    const productoEncontrado = catalogo.find(p => p.id === productId);
-    if (productoEncontrado) {
-      // Crear una clave única para el producto basado en sus opciones
-      const cartItemKey = generateCartItemKey(productId, selectedOptions);
+export function addToCart(productId, selectedOptions = {}) {
+  console.log(`Añadiendo al carrito: ${productId} con opciones:`, selectedOptions);
+  const productoEncontrado = catalogo.find(p => p.id === productId);
+  if (productoEncontrado) {
+    // Crear una clave única para el producto basado en sus opciones
+    const cartItemKey = generateCartItemKey(productId, selectedOptions);
 
-      const itemEnCarrito = cart.find(item => item.key === cartItemKey);
-      if (itemEnCarrito) {
-        if (itemEnCarrito.cantidad < productoEncontrado.stock) {
-          itemEnCarrito.cantidad += 1;
-          mostrarNotificacion("Producto agregado al carrito", 'success');
-        } else {
-          mostrarNotificacion("Has alcanzado el límite de stock disponible para este producto.", 'warning');
-          return;
-        }
-      } else {
-        // Agregar nuevo ítem al carrito con opciones
-        const newItem = {
-          key: cartItemKey, // Clave única
-          id: productoEncontrado.id,
-          titulo: productoEncontrado.titulo,
-          descripcion: productoEncontrado.descripcion,
-          precio: productoEncontrado.precio,
-          moneda: productoEncontrado.moneda,
-          imagen: productoEncontrado.imagen,
-          cantidad: 1,
-          stock: productoEncontrado.stock,
-          options: selectedOptions // Guardar las opciones seleccionadas
-        };
-        cart.push(newItem);
+    const itemEnCarrito = cart.find(item => item.key === cartItemKey);
+    if (itemEnCarrito) {
+      if (itemEnCarrito.cantidad < productoEncontrado.stock) {
+        itemEnCarrito.cantidad += 1;
         mostrarNotificacion("Producto agregado al carrito", 'success');
+      } else {
+        mostrarNotificacion("Has alcanzado el límite de stock disponible para este producto.", 'warning');
+        return;
       }
-      await guardarCarritoEnFirestore();
-      guardarCarritoEnLocalStorage();
-      actualizarBadge();
-      renderCartItems();
     } else {
-      console.error(`Producto con ID ${productId} no encontrado en el catálogo.`);
-      mostrarNotificacion("Producto no encontrado.", 'danger');
+      // Agregar nuevo ítem al carrito con opciones
+      const newItem = {
+        key: cartItemKey, // Clave única
+        id: productoEncontrado.id,
+        titulo: productoEncontrado.titulo,
+        descripcion: productoEncontrado.descripcion,
+        precio: productoEncontrado.precio,
+        moneda: productoEncontrado.moneda,
+        imagen: productoEncontrado.imagen,
+        cantidad: 1,
+        stock: productoEncontrado.stock,
+        options: selectedOptions // Guardar las opciones seleccionadas
+      };
+      cart.push(newItem);
+      mostrarNotificacion("Producto agregado al carrito", 'success');
     }
-  } catch (error) {
-    console.error("Error en addToCart:", error);
-    mostrarNotificacion("Error al añadir al carrito", "error");
+    guardarCarritoEnLocalStorage();
+    actualizarBadge();
+    renderCartItems();
+  } else {
+    console.error(`Producto con ID ${productId} no encontrado en el catálogo.`);
+    mostrarNotificacion("Producto no encontrado.", 'danger');
   }
 }
 
@@ -381,28 +331,4 @@ function cargarCarritoDesdeLocalStorage() {
       cart = [];
     }
   }
-}
-
-// 5. Función cargarCarritoDesdeFirestore mejorada
-async function cargarCarritoDesdeFirestore() {
-    try {
-        const user = auth.currentUser;
-        if (!user) return;
-
-        const docRef = doc(db, 'users', user.uid);
-        const docSnap = await getDoc(docRef);
-        
-        if (docSnap.exists() && docSnap.data().cart) {
-            cart = docSnap.data().cart;
-            guardarCarritoEnLocalStorage();
-        } else {
-            cart = [];
-        }
-        
-        actualizarBadge();
-        renderCartItems();
-    } catch (error) {
-        console.error("Error cargando desde Firestore:", error);
-        cargarCarritoDesdeLocalStorage(); // Fallback a localStorage
-    }
 }
