@@ -97,6 +97,9 @@ export function addToCart(productId, selectedOptions = {}) {
       };
       cart.push(newItem);
       mostrarNotificacion("Producto agregado al carrito", 'success');
+
+      // Llamamos a la función para guardar en Firestore
+      addProductToCartFirestore(newItem);
     }
     guardarCarritoEnLocalStorage();
     actualizarBadge();
@@ -331,4 +334,20 @@ function cargarCarritoDesdeLocalStorage() {
       cart = [];
     }
   }
+}
+
+// Función para guardar un producto en Firestore
+function addProductToCartFirestore(item) {
+  const user = firebase.auth().currentUser;
+  if (!user) {
+    console.log("Usuario no logueado, no se guardará en Firestore.");
+    return;
+  }
+  db.collection("users").doc(user.uid).collection("cart").doc(item.key).set(item)
+    .then(() => {
+      console.log("Producto guardado en Firestore con clave:", item.key);
+    })
+    .catch(error => {
+      console.error("Error al guardar en Firestore:", error);
+    });
 }
