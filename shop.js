@@ -234,12 +234,3 @@ if (searchFormMobile && searchButtonMobile) {
 } else {
   console.error("Formularios de búsqueda móvil no están disponibles.");
 }
-
-// Función para generar tarjeta de producto
-function generarTarjetaProducto(producto) {
-  // ...existing code de tu card...
-  cardElement.addEventListener('click', () => {
-    window.location.href = `detalle.html?id=${producto.id}`;
-  });
-  // ...existing code...
-}
