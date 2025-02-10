@@ -372,8 +372,29 @@ export function getCart() {
   return cart;
 }
 
-// Función para limpiar el carrito (para uso futuro)
+/**
+ * Limpia el carrito también en Firestore
+ */
+export function clearCartFirestore() {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  db.collection("users")
+    .doc(user.uid)
+    .collection("cart")
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    })
+    .catch((error) => console.error("Error al limpiar en Firestore:", error));
+}
+
 export function clearCart() {
+  // Eliminar ítems de Firestore
+  clearCartFirestore();
+  // Vaciar en Local Storage
   cart = [];
   guardarCarritoEnLocalStorage();
   actualizarBadge();
