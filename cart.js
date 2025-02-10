@@ -446,3 +446,18 @@ auth.onAuthStateChanged(user => {
     loadFirestoreCart();
   }
 });
+
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    firebase.firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('wishlist')
+      .onSnapshot((snapshot) => {
+        const badge = document.getElementById('wishlistCount');
+        if (badge) {
+          badge.textContent = snapshot.size;
+        }
+      });
+  }
+});
