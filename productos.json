@@ -2,6 +2,7 @@
   {
     "id": 1,
     "titulo": "Xbox Series X",
+    "descripcion": "Xbox",
     "precio": 350.00,
     "moneda": "USD$",
     "categorias": ["Videojuegos"],
