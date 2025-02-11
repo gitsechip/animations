@@ -4,7 +4,7 @@ import { cargarProductos, productosGlobal } from 'https://gitsechip.github.io/an
 import { addToCart } from 'https://gitsechip.github.io/animations/cart.js';
 
 let paginaActual = 1;
-const productosPorPagina = 6;
+const productosPorPagina = 10;
 let productosFiltrados = [];
 
 const productList = document.getElementById("productList");
@@ -81,9 +81,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Función para filtrar y renderizar productos
 function filtrarYRenderizar() {
-  renderProducts(productosFiltrados, paginaActual);
-  renderPagination(productosFiltrados);
+  productList.innerHTML = ""; // Limpiar productos anteriores
+  paginaActual = 1;
+  loadMoreProducts();
 }
+
 
 // Función para renderizar productos con paginación
 function renderProducts(productos, pagina) {
@@ -133,7 +135,36 @@ function renderProducts(productos, pagina) {
 
     const desc = document.createElement("p");
     desc.classList.add("product-desc");
-    desc.textContent = producto.descripcion;
+    const maxLength = 100; // número de caracteres antes de truncar
+    if (producto.descripcion.length > maxLength) {
+      const fullText = producto.descripcion;
+      const truncatedText = fullText.slice(0, maxLength) + '...';
+      const textSpan = document.createElement("span");
+      textSpan.textContent = truncatedText;
+      
+      const toggleBtn = document.createElement("a");
+      toggleBtn.href = "#";
+      toggleBtn.style.cursor = "pointer";
+      toggleBtn.style.color = "blue";
+      toggleBtn.style.textDecoration = "underline";
+      toggleBtn.textContent = " Mostrar más";
+      
+      toggleBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        if (toggleBtn.textContent.trim() === "Mostrar más") {
+          textSpan.textContent = fullText;
+          toggleBtn.textContent = " Mostrar menos";
+        } else {
+          textSpan.textContent = truncatedText;
+          toggleBtn.textContent = " Mostrar más";
+        }
+      });
+      
+      desc.appendChild(textSpan);
+      desc.appendChild(toggleBtn);
+    } else {
+      desc.textContent = producto.descripcion;
+    }
 
     const price = document.createElement("p");
     price.classList.add("product-price");
@@ -233,4 +264,132 @@ if (searchFormMobile && searchButtonMobile) {
   searchButtonMobile.addEventListener("click", handleSearch);
 } else {
   console.error("Formularios de búsqueda móvil no están disponibles.");
+}
+
+// Función para cargar más productos
+function loadMoreProducts() {
+  const inicio = (paginaActual - 1) * productosPorPagina;
+  const fin = inicio + productosPorPagina;
+  const productosPagina = productosFiltrados.slice(inicio, fin);
+  
+  if (!productList) {
+    console.error("Elemento 'productList' no está disponible.");
+    return;
+  }
+  
+  // Crear y agregar las tarjetas de producto (a diferencia de renderProducts que limpia el contenedor)
+  productosPagina.forEach(producto => {
+    const col = document.createElement("div");
+    col.classList.add("col-md-4", "mb-4");
+  
+    // Crear tarjeta de producto de forma segura
+    const card = document.createElement("div");
+    card.classList.add("card", "product-card", "h-100");
+  
+    const link = document.createElement("a");
+    link.href = `detalle.html?id=${producto.id}`;
+    link.style.textDecoration = "none";
+    link.style.color = "inherit";
+    link.setAttribute("aria-label", `Ver detalles de ${producto.titulo}`);
+  
+    const img = document.createElement("img");
+    img.src = producto.imagen;
+    img.classList.add("card-img-top", "product-img");
+    img.alt = producto.titulo;
+    img.loading = "lazy";
+  
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body", "d-flex", "flex-column", "flex-grow-1");
+  
+    const title = document.createElement("h5");
+    title.classList.add("product-title");
+    title.textContent = producto.titulo;
+  
+    // Insertar la descripción con el toggle "Mostrar más"
+    const desc = document.createElement("p");
+    desc.classList.add("product-desc");
+    const maxLength = 100;
+    if (producto.descripcion.length > maxLength) {
+      const fullText = producto.descripcion;
+      const truncatedText = fullText.slice(0, maxLength) + '...';
+      const textSpan = document.createElement("span");
+      textSpan.textContent = truncatedText;
+    
+      const toggleBtn = document.createElement("a");
+      toggleBtn.href = "#";
+      toggleBtn.style.cursor = "pointer";
+      toggleBtn.style.color = "blue";
+      toggleBtn.style.textDecoration = "underline";
+      toggleBtn.textContent = " Mostrar más";
+    
+      toggleBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        if (toggleBtn.textContent.trim() === "Mostrar más") {
+          textSpan.textContent = fullText;
+          toggleBtn.textContent = " Mostrar menos";
+        } else {
+          textSpan.textContent = truncatedText;
+          toggleBtn.textContent = " Mostrar más";
+        }
+      });
+    
+      desc.appendChild(textSpan);
+      desc.appendChild(toggleBtn);
+    } else {
+      desc.textContent = producto.descripcion;
+    }
+    
+    const price = document.createElement("p");
+    price.classList.add("product-price");
+    price.textContent = `${producto.precio} ${producto.moneda}`;
+  
+    cardBody.appendChild(title);
+    cardBody.appendChild(desc);
+    cardBody.appendChild(price);
+    link.appendChild(img);
+    link.appendChild(cardBody);
+    card.appendChild(link);
+  
+    const cardFooter = document.createElement("div");
+    cardFooter.classList.add("card-body");
+  
+    const addButton = document.createElement("button");
+    addButton.classList.add("btn", "btn-primary", "w-100");
+    addButton.textContent = "Agregar al Carrito";
+    addButton.onclick = (e) => {
+      addToCart(producto.id);
+      e.stopPropagation();
+    };
+    addButton.setAttribute("aria-label", `Agregar ${producto.titulo} al carrito`);
+  
+    cardFooter.appendChild(addButton);
+    card.appendChild(cardFooter);
+    col.appendChild(card);
+    productList.appendChild(col);
+  });
+  
+  // Actualizar el botón de cargar más o removerlo si ya no hay más publicaciones
+  const loadMoreBtn = document.getElementById("loadMoreBtn");
+  if (fin >= productosFiltrados.length) {
+    if (loadMoreBtn) loadMoreBtn.remove();
+  } else {
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = "block";
+    } else {
+      createLoadMoreButton();
+    }
+  }
+}
+  
+function createLoadMoreButton() {
+  const btn = document.createElement("button");
+  btn.textContent = "Cargar más productos";
+  btn.classList.add("btn", "btn-secondary", "d-block", "mx-auto", "my-4");
+  btn.id = "loadMoreBtn";
+  btn.addEventListener("click", () => {
+    paginaActual++;
+    loadMoreProducts();
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  });
+  productList.parentElement.appendChild(btn);
 }
