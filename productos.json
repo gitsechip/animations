@@ -1,21 +1,18 @@
 [
     {
         "id": 1,
-        "titulo": "Camiseta Deportiva (Unisex)",
-        "descripcion": "Una camiseta de malla deportiva que se robará todas las miradas",
-        "precio": 299.99,
+        "titulo": "Xbox Series X",
+        "descripcion": "Presentamos Xbox Series X, la Xbox más rápida y potente que nunca. Juega miles de títulos de las cuatro generaciones de consolas, todos los juegos se ven y juegan mejor en Xbox Series X.",
+        "precio": 350.00,
         "moneda": "USD$",
-        "categorias": ["Ropa", "Ofertas", "Unisex"],
-        "tallas": ["S", "M", "L", "XL"],
-        "color": ["Rojo", "Negro"],
-        "features": ["Transpirable", "Secado Rápido"],
-        "imagen": "https://assets.adidas.com/images/w_1880,f_auto,q_auto/49e68c9ef6b442528756070c602e2e40_9366/IY7378_21_model.jpg",
+        "categorias": ["Videojuegos"],
+        "imagen": "https://lh3.googleusercontent.com/d/1i4Ocb8n8ouJLe2LMYo8y3ghs7JYERJoj",
         "imagenes": [
-          "https://assets.adidas.com/images/w_1880,f_auto,q_auto/4764afe559c44ecfaa522a29ff2cad9a_9366/IY7378_23_hover_model.jpg",
-          "https://assets.adidas.com/images/w_1880,f_auto,q_auto/60484c489cda4917b585afe65593754e_9366/IY7378_25_model.jpg",
-          "https://assets.adidas.com/images/w_1880,f_auto,q_auto/998a05da67c0462e8a5ab1bcd6ed7b69_9366/IY7378_02_laydown.jpg"
+          "https://lh3.googleusercontent.com/d/1H7xxXUX6efQZyChCx_5eCR6HCUk0hgNI",
+          "https://lh3.googleusercontent.com/d/117O1WGf8IjcUwK6dskVH9sWdFzMkJz9Z",
+          "https://lh3.googleusercontent.com/d/1QNzAXbYPooQXWO5XSwQMbIHZFS5i9GcX"
         ],
-        "stock": 50
+        "stock": 1
     },
     {
       "id": 2,
