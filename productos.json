@@ -1,57 +1,32 @@
 [
-    {
-        "id": 1,
-        "titulo": "Xbox Series X",
-        "descripcion": "Presentamos Xbox Series X, la Xbox más rápida y potente que nunca. Juega miles de títulos de las cuatro generaciones de consolas, todos los juegos se ven y juegan mejor en Xbox Series X.",
-        "precio": 350.00,
-        "moneda": "USD$",
-        "categorias": ["Videojuegos"],
-        "imagen": "https://lh3.googleusercontent.com/d/1i4Ocb8n8ouJLe2LMYo8y3ghs7JYERJoj",
-        "imagenes": [
-          "https://lh3.googleusercontent.com/d/1H7xxXUX6efQZyChCx_5eCR6HCUk0hgNI",
-          "https://lh3.googleusercontent.com/d/117O1WGf8IjcUwK6dskVH9sWdFzMkJz9Z",
-          "https://lh3.googleusercontent.com/d/1QNzAXbYPooQXWO5XSwQMbIHZFS5i9GcX"
-        ],
-        "stock": 1
-    },
-    {
-      "id": 2,
-      "titulo": "Sneakers Urbanos",
-      "descripcion": "Tenis casuales con diseño moderno y suela antideslizante",
-      "precio": 899.99,
-      "moneda": "USD$",
-      "categorias": ["Calzado", "Ofertas"],
-      "tallas": [38, 39, 40, 41, 42, 43],
-      "color": "Negro",
-      "features": ["Impermeable"],
-      "imagen": "https://via.placeholder.com/300x200.png?text=Sneakers+Urbanos",
-      "stock": 20
-    },
-    {
-      "id": 3,
-      "titulo": "Mochila Ejecutiva",
-      "descripcion": "Mochila resistente al agua con compartimento para laptop",
-      "precio": 559.00,
-      "moneda": "USD$",
-      "categorias": ["Accesorios"],
-      "tallas": [],
-      "color": "Gris",
-      "features": [],
-      "imagen": "https://via.placeholder.com/300x200.png?text=Mochila+Ejecutiva",
-      "stock": 15
-    },
-    {
-      "id": 4,
-      "titulo": "Sudadera Casual",
-      "descripcion": "Sudadera con capucha para uso diario",
-      "precio": 499.00,
-      "moneda": "USD$",
-      "categorias": ["Ropa", "Unisex"],
-      "tallas": ["M", "L"],
-      "color": "Azul",
-      "features": ["Capucha", "BolsilloFrontal"],
-      "imagen": "https://via.placeholder.com/300x200.png?text=Sudadera+Casual",
-      "stock": 10
-    }
-  ]
-  
+  {
+    "id": 1,
+    "titulo": "Xbox Series X",
+    "precio": 350.00,
+    "moneda": "USD$",
+    "categorias": ["Videojuegos"],
+    "imagen": "https://lh3.googleusercontent.com/d/1i4Ocb8n8ouJLe2LMYo8y3ghs7JYERJoj",
+    "imagenes": [
+        "https://lh3.googleusercontent.com/d/1H7xxXUX6efQZyChCx_5eCR6HCUk0hgNI",
+        "https://lh3.googleusercontent.com/d/117O1WGf8IjcUwK6dskVH9sWdFzMkJz9Z",
+        "https://lh3.googleusercontent.com/d/1QNzAXbYPooQXWO5XSwQMbIHZFS5i9GcX"
+      ],
+    "stock": 1,
+    "attributes": []
+  },
+  {
+    "id": 2,
+    "titulo": "Sneakers Urbanos",
+    "precio": 899.99,
+    "moneda": "USD$",
+    "imagen": "https://lh3.googleusercontent.com/d/1i4Ocb8n8ouJLe2LMYo8y3ghs7JYERJoj",
+    "categorias": ["Ropa"],
+    "attributes": [
+      {
+        "nombre": "tallas",
+        "requerido": true,
+        "opciones": [36, 37, 38, 39]
+      }
+    ]
+  }
+]
