@@ -23,6 +23,7 @@
     "moneda": "USD$",
     "imagen": "https://lh3.googleusercontent.com/d/1i4Ocb8n8ouJLe2LMYo8y3ghs7JYERJoj",
     "categorias": ["Ropa"],
+    "stock": 2,
     "attributes": [
       {
         "nombre": "tallas",
