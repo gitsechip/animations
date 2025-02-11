@@ -2,7 +2,7 @@
   {
     "id": 1,
     "titulo": "Xbox Series X",
-    "descripcion": "Xbox",
+    "descripcion": "Presentamos Xbox Series X, la Xbox más rápida y potente que nunca. Juega miles de títulos de cuatro generaciones de consolas: todos los juegos se ven y juegan mejor en Xbox Series X. En el corazón de la Serie X se encuentra la arquitectura Xbox Velocity, que combina una SSD personalizada con software integrado para un juego más rápido y optimizado con tiempos de carga significativamente reducidos. Muévete sin problemas entre varios juegos en un destello con un resumen rápido. Explora nuevos mundos ricos y disfruta de la acción como nunca antes con los inigualables 12 Teraflops de potencia de procesamiento gráfico crudo. Disfruta de juegos en 4K con hasta 120 fotogramas por segundo, sonido espacial 3D avanzado y mucho más.",
     "precio": 350.00,
     "moneda": "USD$",
     "categorias": ["Videojuegos"],
@@ -19,7 +19,7 @@
     "id": 2,
     "titulo": "Sneakers Urbanos",
     "descripcion": "Sneaker",
-    "precio": 899.99,
+    "precio": 9.99,
     "moneda": "USD$",
     "imagen": "https://lh3.googleusercontent.com/d/1i4Ocb8n8ouJLe2LMYo8y3ghs7JYERJoj",
     "categorias": ["Ropa"],
