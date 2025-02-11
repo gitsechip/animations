@@ -18,6 +18,7 @@
   {
     "id": 2,
     "titulo": "Sneakers Urbanos",
+    "descripcion": "Sneaker",
     "precio": 899.99,
     "moneda": "USD$",
     "imagen": "https://lh3.googleusercontent.com/d/1i4Ocb8n8ouJLe2LMYo8y3ghs7JYERJoj",
