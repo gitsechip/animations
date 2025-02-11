@@ -28,6 +28,11 @@
         "nombre": "tallas",
         "requerido": true,
         "opciones": [36, 37, 38, 39]
+      },
+      {
+        "nombre": "colores",
+        "requerido": true,
+        "opciones": ["Negro", "Blanco", "Rojo", "Azul"]
       }
     ]
   }
